@@ -1,0 +1,30 @@
+# Python bytecode & caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/
+
+# Virtual environment
+.venv/
+venv/
+
+# Data & generated outputs (reproduce via code, don't commit)
+/data/
+/outputs/
+*.parquet
+*.log
+
+# Secrets
+.env
+
+# Notebooks & OS / editor cruft
+.ipynb_checkpoints/
+.DS_Store
+.vscode/
+.idea/
