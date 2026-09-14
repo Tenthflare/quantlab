@@ -35,11 +35,11 @@ class PriceStore:
         The last `lookback` TRADING days up to and including `end`.
         `lookback` is in trading days (rows of the calendar), not calendar days.
         """
-        date_idx = int(self.dates.searchsorted(end_date, side="right"))
-        if date_idx == 0:
+        date_idx = self.date_position(end_date)
+        if date_idx < 0:
             return self.panel.iloc[:0]
         lo = self.dates[max(0, date_idx - lookback + 1)]
-        hi = self.dates[date_idx - 1]  # last trading day <= end
+        hi = self.dates[date_idx]  # last trading day <= end
         window = self.panel.loc[lo:hi]
         assert window.index.get_level_values("date").max() <= pd.Timestamp(end_date)  # firewall guard
         return window
