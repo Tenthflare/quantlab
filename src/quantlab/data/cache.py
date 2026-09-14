@@ -1,8 +1,10 @@
 from pathlib import Path
 import pandas as pd
 
-RAW = Path("data/raw")
-PROC = Path("data/processed")
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+RAW = REPO_ROOT / "data" / "raw"
+PROC = REPO_ROOT / "data" / "processed"
 RAW.mkdir(parents=True, exist_ok=True)
 PROC.mkdir(parents=True, exist_ok=True)
 

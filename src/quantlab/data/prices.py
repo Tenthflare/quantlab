@@ -10,6 +10,7 @@ class PriceStore:
     def __init__(self, panel: pd.DataFrame) -> None:
         panel = panel.sort_index()
         self.panel = panel
+        self.dates = panel.index.get_level_values("date").unique().sort_values()
         # start and end date may not be within the specified start_date and end_date (works for yfinance format)
         self.start_date_trading = self.panel.index.get_level_values("date")[0]
         self.end_date_trading = self.panel.index.get_level_values("date")[-1]
@@ -22,6 +23,20 @@ class PriceStore:
         selected_range = self.panel.loc[start_date:end_date]
         dates = selected_range.index.get_level_values("date").unique().sort_values()
         return dates
+
+    def history_lookback(self, end_date: str, lookback: int):
+        """
+        The last `lookback` TRADING days up to and including `end`.
+        `lookback` is in trading days (rows of the calendar), not calendar days.
+        """
+        i = int(self.dates.searchsorted(end_date, side="right"))
+        if i == 0:
+            return self.panel.iloc[:0]
+        lo = self.dates[max(0, i - lookback)]
+        hi = self.dates[i - 1]  # last trading day <= end
+        window = self.panel.loc[lo:hi]
+        assert window.index.get_level_values("date").max() <= pd.Timestamp(end_date)  # firewall guard
+        return window
 
     def price_at(self, date, field="close_adj") -> pd.Series:
         """Cross-section of the universe at one trading date for a given field."""
@@ -38,6 +53,6 @@ class PriceStore:
         price_final = self.price_at(to_date, "close_adj")
         realised_return = (price_final / price_init) - 1.0
         if tickers is not None:
-            realised_return = realised_return[tickers]
+            realised_return = realised_return.reindex(tickers)
         return realised_return
 
