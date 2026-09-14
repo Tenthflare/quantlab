@@ -24,16 +24,22 @@ class PriceStore:
         dates = selected_range.index.get_level_values("date").unique().sort_values()
         return dates
 
+    def date_position(self, date):
+        """
+        Calendar index of the last trading day <= date (-1 if before all data).
+        """
+        return int(self.dates.searchsorted(pd.Timestamp(date), side="right")) - 1
+
     def history_lookback(self, end_date: str, lookback: int):
         """
         The last `lookback` TRADING days up to and including `end`.
         `lookback` is in trading days (rows of the calendar), not calendar days.
         """
-        i = int(self.dates.searchsorted(end_date, side="right"))
-        if i == 0:
+        date_idx = int(self.dates.searchsorted(end_date, side="right"))
+        if date_idx == 0:
             return self.panel.iloc[:0]
-        lo = self.dates[max(0, i - lookback)]
-        hi = self.dates[i - 1]  # last trading day <= end
+        lo = self.dates[max(0, date_idx - lookback + 1)]
+        hi = self.dates[date_idx - 1]  # last trading day <= end
         window = self.panel.loc[lo:hi]
         assert window.index.get_level_values("date").max() <= pd.Timestamp(end_date)  # firewall guard
         return window

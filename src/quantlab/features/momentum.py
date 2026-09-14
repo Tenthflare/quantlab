@@ -11,7 +11,7 @@ class Momentum(Feature):
         self.lookback = lookback                # start of window
         self.lookback_end = lookback_end        # end of window, excluding a period for trading itself
 
-    def compute(self, prices: PriceStore, date: int, universe: list[str]) -> pd.Series:
+    def compute(self, prices: PriceStore, date: str, universe: list[str]) -> pd.Series:
         date_idx = prices.date_position(date)
         if date_idx < self.lookback:                          # not enough history yet
             return pd.Series(index=pd.Index(universe, name="ticker"), dtype="float64")

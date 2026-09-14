@@ -49,3 +49,6 @@ def fetch_clean_data(universe) -> pd.DataFrame:
         raw_df = load_raw_data(universe_name)
         return build_price_panel(raw_df)
 
+
+
+
