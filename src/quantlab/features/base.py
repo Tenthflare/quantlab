@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
+
 import pandas as pd
+
 from quantlab.data.prices import PriceStore
+
 
 class Feature(ABC):
     name: str
