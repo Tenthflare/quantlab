@@ -56,11 +56,12 @@ class Metrics:
     def hit_rate(self):
         return float((self.fwd_return > 0).mean())
 
-    def turnover_rate(self):
+    def avg_turnover(self):
         return float(self.turnover.mean())
 
     def summary(self) -> dict:
         return {
+            "cumulative_return": self.cumulative_return(),
             "annualised_return": self.annualised_return(),
             "annualised_volatility": self.annualised_volatility(),
             "sharpe_ratio": self.sharpe_ratio(),
@@ -68,6 +69,6 @@ class Metrics:
             "calmar_ratio": self.calmar_ratio(),
             "max_drawdown": self.max_drawdown(),
             "hit_rate": self.hit_rate(),
-            "avg_turnover": self.turnover_rate(),
+            "avg_turnover": self.avg_turnover(),
             "n_periods": self.num_datapoint,
         }

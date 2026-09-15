@@ -1,0 +1,33 @@
+{
+  "stats": {
+    "cumulative_return": "date\n2010-01-29    1.000000\n2010-02-26    1.000000\n2010-03-31    1.000000\n2010-04-30    1.000000\n2010-05-28    1.000000\n                ...   \n2026-04-30    0.689318\n2026-05-29    0.728341\n2026-06-30    0.665186\n2026-07-31    0.617137\n2026-08-31    0.623115\nName: pnl, Length: 200, dtype: float64",
+    "annualised_return": -0.027982462580363077,
+    "annualised_volatility": 0.17272365641148213,
+    "sharpe_ratio": -0.07618986894953747,
+    "sortino_ratio": -0.10134728774937392,
+    "calmar_ratio": -0.0106240500561038,
+    "max_drawdown": -2.633879022838979,
+    "hit_rate": 0.475,
+    "avg_turnover": 0.9733333333333334,
+    "n_periods": 200
+  },
+  "permutation": {
+    "real_mean_pnl": -0.00012331606220631407,
+    "null_mean": 5.122050721438498e-05,
+    "null_std": 0.0023957678536401877,
+    "p_value": 0.9626791069643452
+  },
+  "config": {
+    "run_name": "momentum_dow30",
+    "start_date": "2010-01-01",
+    "universe": "DOW30",
+    "lookback": 252,
+    "lookback_end": 21,
+    "k": 6,
+    "cost_bps": 10.0,
+    "n_permutation": 3000,
+    "seed": 0,
+    "output_dir": "output"
+  },
+  "git_sha": "894101b"
+}

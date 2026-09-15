@@ -23,6 +23,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "pytest",
+  "pyyaml",
   "ruff",
   "mypy",
   "pandas-stubs",        # type stubs so mypy understands pandas

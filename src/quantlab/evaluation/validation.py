@@ -6,7 +6,7 @@ from quantlab.data.prices import PriceStore
 
 
 def permutation_pnl(
-    records: BacktestResult,
+    results: BacktestResult,
     prices: PriceStore,
     universe: list[str],
     rebalance_dates: list[pd.Timestamp],
@@ -30,7 +30,7 @@ def permutation_pnl(
     # Weights are already leak-free (computed from info <= t). Cache (w, fwd) per period.
     period_records = []
     for t, t_next in pairs:
-        weight_t = records.weights.loc[t]
+        weight_t = results.weights.loc[t]
         fwd_return_t = prices.calculate_realized_return(t, t_next, universe).reindex(weight_t.index)
         period_records.append((weight_t.to_numpy(), fwd_return_t.to_numpy()))
 
