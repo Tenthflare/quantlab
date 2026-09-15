@@ -8,10 +8,11 @@ import matplotlib.pyplot as plt
 
 from quantlab.evaluation.metrics import Metrics
 
-font = {'size' : 8}
+font = {"size": 8}
 plt.style.use("default")
-plt.rc('text', usetex=True)
-plt.rc('font', **font, family='serif')
+plt.rc("text", usetex=True)
+plt.rc("font", **font, family="serif")
+
 
 def tearsheet(
     records: pd.DataFrame,

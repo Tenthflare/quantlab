@@ -12,7 +12,7 @@ class ForwardReturn:
     def __init__(self, horizon: int) -> None:
         self.horizon = horizon  # holding period, trading days, equal to lookback_end
 
-    def compute(self, prices: PriceStore, date: str, universe: list[str]) -> pd.Series:
+    def compute(self, prices: PriceStore, date: pd.Timestamp, universe: list[str]) -> pd.Series:
         date_idx = prices.date_position(date)
         date_idx_end = date_idx + self.horizon
         if date_idx < 0 or date_idx_end >= len(prices.dates):  # future window not fully available

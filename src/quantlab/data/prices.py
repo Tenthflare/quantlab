@@ -12,7 +12,7 @@ class PriceStore:
     def __init__(self, panel: pd.DataFrame) -> None:
         panel = panel.sort_index()
         self.panel = panel
-        self.dates = panel.index.get_level_values("date").unique().sort_values()
+        self.dates = pd.DatetimeIndex(panel.index.get_level_values("date").unique().sort_values())
         # start and end date may not be within the specified start_date and end_date
         # (works for yfinance format)
         self.start_date_trading = self.panel.index.get_level_values("date")[0]
@@ -25,7 +25,7 @@ class PriceStore:
         assert start_date >= self.start_date_trading and end_date <= self.end_date_trading
         selected_range = self.panel.loc[start_date:end_date]
         dates = selected_range.index.get_level_values("date").unique().sort_values()
-        return dates
+        return pd.DatetimeIndex(dates)
 
     def date_position(self, date: pd.Timestamp):
         """
@@ -64,5 +64,7 @@ class PriceStore:
         price_final = self.price_at(to_date, "close_adj")
         realised_return = (price_final / price_init) - 1.0
         if tickers is not None:
+            if isinstance(tickers, str):
+                tickers = [tickers]
             realised_return = realised_return.reindex(tickers)
         return realised_return

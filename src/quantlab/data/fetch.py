@@ -44,6 +44,7 @@ def build_price_panel(raw_df: pd.DataFrame) -> pd.DataFrame:
     panel = raw_df.stack(
         level="Ticker", future_stack=True
     )  # cols (field,ticker) -> rows (Date,Ticker)
+    assert isinstance(panel, pd.DataFrame)
     panel.index.names = ["date", "ticker"]
     panel = panel.rename(
         columns={"Close": "close_raw", "Volume": "volume", "Adj Close": "close_adj"}
