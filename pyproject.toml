@@ -14,13 +14,16 @@ dependencies = [
   "pandas",
   "numpy",
   "pyarrow",
-  "yfinance",
   "matplotlib",
   "nasdaq-data-link",    # Sharadar data access
   "python-dotenv",       # load API key from .env
 ]
 
 [project.optional-dependencies]
+data = [
+  "yfinance",
+  "nasdaq-data-link",
+]
 dev = [
   "pytest",
   "pyyaml",
