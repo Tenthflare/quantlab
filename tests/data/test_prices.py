@@ -44,14 +44,18 @@ def test_history_lookback_counts_trading_days(store):
 
 # ------------------------------------------------------------------------------
 def test_realized_return_matches_hand_computed(store):
-    r = store.calculate_realized_return(pd.Timestamp("2020-01-02"), pd.Timestamp("2020-01-03"), tickers=["A", "B"])
+    r = store.calculate_realized_return(
+        pd.Timestamp("2020-01-02"), pd.Timestamp("2020-01-03"), tickers=["A", "B"]
+    )
     assert r["A"] == pytest.approx(0.05)  # 105/100 - 1
     assert r["B"] == pytest.approx(0.10)  #  55/50 - 1
 
 
 def test_realized_return_reindexes_missing_ticker(store):
     # A name absent from the panel comes back NaN, not a KeyError.
-    r = store.calculate_realized_return(pd.Timestamp("2020-01-02"), pd.Timestamp("2020-01-03"), tickers=["A", "C"])
+    r = store.calculate_realized_return(
+        pd.Timestamp("2020-01-02"), pd.Timestamp("2020-01-03"), tickers=["A", "C"]
+    )
     assert r["A"] == pytest.approx(0.05)
     assert pd.isna(r["C"])
 

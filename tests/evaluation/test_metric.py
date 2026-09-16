@@ -28,7 +28,7 @@ def ran_backtest():
     ]
     universe = ["A", "B", "C", "D", "E", "F"]
     rng = np.random.default_rng(42)
-    prices = rng.uniform(0, 150, size=(len(rebalance_dates), len(universe)))
+    prices = rng.uniform(100, 150, size=(len(rebalance_dates), len(universe)))
     idx = pd.MultiIndex.from_product([rebalance_dates, universe], names=["date", "ticker"])
     panel = pd.DataFrame(
         {"close_adj": prices.ravel(), "close_raw": prices.ravel(), "volume": 1}, index=idx
@@ -42,10 +42,16 @@ def ran_backtest():
     results = engine.run(rebalance_dates, universe)
     return results, price_store, universe, rebalance_dates
 
+
 def test_max_drawdown(ran_backtest):
     results, price_store, universe, rebalance_dates = ran_backtest
     fwd_returns, turnover = results.records["pnl"], results.records["turnover"]
     periods_per_year = 12
     metrics = Metrics(fwd_returns, turnover, periods_per_year)
     stats = metrics.summary()
-    assert abs(stats["max_drawdown"]) >= -1.0
+    assert stats["max_drawdown"] >= -1.0
+
+def test_max_drawdown_on_hand_computed_equity():
+    pnl = pd.Series([0.10, -0.30])
+    m = Metrics(pnl, pd.Series([1.0, 1.0]), 12)
+    assert m.max_drawdown() == pytest.approx(-0.30, rel=1e-6)
