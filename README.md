@@ -1,27 +1,29 @@
 # quantlab — Backtesting Platform
 
-![CI](badge) ![Python 3.11](badge) ![License: MIT](badge)
+[![CI](https://github.com/Tenthflare/quantlab/actions/workflows/ci.yml/badge.svg)]
+(https://github.com/Tenthflare/quantlab/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 ## Motivation
-A sandbox to backtest portfolio optimisation/trading strategies
+A cross-sectional equity backtesting platform to evaluate portfolio optimisation and trading strategies. 
 
 ## Key Features
-- Point-in-time data handling (no look-ahead)
-- Purged, embargoed walk-forward validation
-- Realistic transaction-cost model
-- Label-permutation leakage test
+- Point-in-time data handling (no look-ahead bias)
+- Cost-aware transaction
+- Statistical test for leakage
+- Reproducible backtesting
 
 ## Results (to be filled later)
 ![tearsheet](outputs/tearsheet.png)
 
-## Quickstart
+## Quickstart (demo)
 ```bash
-git clone ... && cd quantlab
+git clone https://github.com/Tenthflare/quantlab && cd quantlab
 python -m venv .venv && source .venv/bin/activate (for Linux)
 python -m venv .venv && .venv/Scripts/activate (for Windows)
 pip install -e ".[dev]"
-export NASDAQ_DATA_LINK_API_KEY=...
-quantlab-run --config configs/momentum_p1.yaml
+quantlab-run --config configs/momentum_dow30.yaml
 ```
 
 ## Project Structure (to be filled)

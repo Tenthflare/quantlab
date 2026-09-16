@@ -5,8 +5,8 @@
     "annualised_volatility": 0.17272365641148213,
     "sharpe_ratio": -0.07618986894953747,
     "sortino_ratio": -0.10134728774937392,
-    "calmar_ratio": -0.0106240500561038,
-    "max_drawdown": -2.633879022838979,
+    "calmar_ratio": -0.0476860673896175,
+    "max_drawdown": -0.5868058347469347,
     "hit_rate": 0.475,
     "avg_turnover": 0.9733333333333334,
     "n_periods": 200
@@ -29,5 +29,5 @@
     "seed": 0,
     "output_dir": "output"
   },
-  "git_sha": "894101b"
+  "git_sha": "a6c3074"
 }

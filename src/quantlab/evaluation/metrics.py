@@ -51,7 +51,8 @@ class Metrics:
         return float("nan") if max_dd == 0 else float(ann_return / max_dd)
 
     def max_drawdown(self) -> float:
-        return float((self.fwd_return / self.fwd_return.cummax() - 1.0).min())
+        cumulative_return = self.cumulative_return()
+        return float((cumulative_return / cumulative_return.cummax() - 1.0).min())
 
     def hit_rate(self):
         return float((self.fwd_return > 0).mean())
