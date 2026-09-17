@@ -15,7 +15,6 @@ dependencies = [
   "numpy",
   "pyarrow",
   "matplotlib",
-  "nasdaq-data-link",    # Sharadar data access
   "python-dotenv",       # load API key from .env
 ]
 
@@ -41,7 +40,7 @@ line-length = 100
 select = ["E", "F", "I", "B", "UP"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = ["3.12"]
 ignore_missing_imports = true
 warn_unused_ignores = true
 
