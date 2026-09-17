@@ -4,9 +4,13 @@ import yfinance as yf
 
 from quantlab.data.cache import (
     load_processed_data,
+    load_processed_data_sql,
     load_raw_data,
     processed_exists,
+    processed_sql_exists,
     raw_exists,
+    save_processed_data,
+    save_processed_data_sql,
     save_raw_data,
 )
 
@@ -61,4 +65,17 @@ def fetch_clean_data(universe) -> pd.DataFrame:
         return load_processed_data(universe_name)
     else:
         raw_df = load_raw_data(universe_name)
-        return build_price_panel(raw_df)
+        panel = build_price_panel(raw_df)
+        save_processed_data(universe_name, panel)  # <-- persist so next run caches
+        return panel
+
+
+def fetch_clean_data_sql(universe) -> pd.DataFrame:
+    ticker_list, universe_name = universe
+    if processed_sql_exists(universe_name):
+        return load_processed_data_sql(universe_name)
+    else:
+        raw_df = load_raw_data(universe_name)
+        panel = build_price_panel(raw_df)
+        save_processed_data_sql(universe_name, panel)  # <-- persist so next run caches
+        return panel

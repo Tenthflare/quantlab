@@ -9,6 +9,7 @@ class RunConfig:
     run_name: str
     start_date: str
     universe: str
+    storage: str
     lookback: int
     lookback_end: int
     k: int
@@ -29,6 +30,7 @@ def load_config(path) -> RunConfig:
         run_name=config["run_name"],
         start_date=config["start_date"],
         universe=config["universe"],
+        storage=config["storage"],
         lookback=feature["lookback"],
         lookback_end=feature["lookback_end"],
         k=portfolio["k"],

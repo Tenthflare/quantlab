@@ -4,7 +4,7 @@ from pathlib import Path
 
 from quantlab.backtest.cost import FixedBPSCost
 from quantlab.backtest.engine import BacktestEngine, month_end_rebalance_dates
-from quantlab.data.fetch import fetch_clean_data, fetch_data_yf
+from quantlab.data.fetch import fetch_clean_data, fetch_clean_data_sql, fetch_data_yf
 from quantlab.data.prices import PriceStore
 from quantlab.data.universe import dow_30
 from quantlab.evaluation.metrics import Metrics
@@ -15,6 +15,7 @@ from quantlab.pipeline.load_config import RunConfig
 from quantlab.portfolio.rank_dollar_neutral import RankDollarNeutral
 
 UNIVERSES = {"DOW30": dow_30}
+LOADERS = {"parquet": fetch_clean_data, "sql": fetch_clean_data_sql}
 
 
 def _git_sha() -> str:
@@ -29,7 +30,7 @@ def run_from_config(cfg: RunConfig) -> dict:
     tickers, _ = universe
 
     fetch_data_yf(universe, cfg.start_date)
-    panel = fetch_clean_data(universe)
+    panel = LOADERS[cfg.storage](universe)
     store = PriceStore(panel)
 
     rebalance_dates = list(month_end_rebalance_dates(store.dates))

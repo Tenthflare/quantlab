@@ -1,5 +1,6 @@
 run_name: momentum_dow30
 universe: DOW30
+storage: sql        # "sql" | "parquet
 start_date: "2010-01-01"
 feature: {lookback: 252, lookback_end: 21}
 portfolio: {k: 6}

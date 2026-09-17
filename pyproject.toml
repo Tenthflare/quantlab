@@ -15,6 +15,7 @@ dependencies = [
   "numpy",
   "pyarrow",
   "matplotlib",
+  "sqlalchemy",
   "python-dotenv",       # load API key from .env
 ]
 

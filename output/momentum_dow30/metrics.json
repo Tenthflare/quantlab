@@ -21,6 +21,7 @@
     "run_name": "momentum_dow30",
     "start_date": "2010-01-01",
     "universe": "DOW30",
+    "storage": "sql",
     "lookback": 252,
     "lookback_end": 21,
     "k": 6,
@@ -29,5 +30,5 @@
     "seed": 0,
     "output_dir": "output"
   },
-  "git_sha": "a28bb46"
+  "git_sha": "2e5740e"
 }

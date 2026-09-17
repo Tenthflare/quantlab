@@ -16,7 +16,7 @@ venv/
 
 # Data & generated outputs (reproduce via code, don't commit)
 /data/
-/outputs/
+/output/
 *.parquet
 *.log
 
