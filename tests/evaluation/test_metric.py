@@ -51,7 +51,8 @@ def test_max_drawdown(ran_backtest):
     stats = metrics.summary()
     assert stats["max_drawdown"] >= -1.0
 
+
 def test_max_drawdown_on_hand_computed_equity():
     pnl = pd.Series([0.10, -0.30])
-    m = Metrics(pnl, pd.Series([1.0, 1.0]), 12)
-    assert m.max_drawdown() == pytest.approx(-0.30, rel=1e-6)
+    metrics = Metrics(pnl, pd.Series([1.0, 1.0]), 12)
+    assert metrics.max_drawdown() == pytest.approx(-0.30, rel=1e-6)
