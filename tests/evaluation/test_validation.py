@@ -16,9 +16,10 @@ class FakeFeature:
 
     def __init__(self, by_date):
         self.by_date = by_date
+        self.min_history: int = 0
 
-    def compute(self, prices, date, universe):
-        return self.by_date[pd.Timestamp(date)].reindex(universe)
+    def compute(self, view, universe):
+        return self.by_date[view.horizon].reindex(universe)
 
 
 @pytest.fixture
@@ -45,9 +46,7 @@ def ran_backtest():
 
 def test_shuffled_labels_center_at_zero(ran_backtest):
     results, price_store, universe, rebalance_dates = ran_backtest
-    out = permutation_pnl(
-        results, price_store, universe, rebalance_dates, n_permutations=3000, seed=1
-    )
+    out = permutation_pnl(results, price_store, universe, n_permutations=3000, seed=1)
     # Dollar-neutral book => shuffled PnL has expectation 0. The Monte-Carlo mean
     # should be within a few standard errors of zero.
     standard_error = out["null_std"] / np.sqrt(3000)

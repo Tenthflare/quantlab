@@ -1,9 +1,11 @@
+import numpy as np
 import pandas as pd
 import pytest
 
 from quantlab.backtest.cost import FixedBPSCost
 from quantlab.backtest.engine import BacktestEngine
 from quantlab.data.prices import PriceStore
+from quantlab.features.momentum import Momentum
 from quantlab.portfolio.rank_dollar_neutral import RankDollarNeutral
 
 
@@ -14,9 +16,10 @@ class FakeFeature:
 
     def __init__(self, by_date):
         self.by_date = by_date
+        self.min_history: int = 0
 
-    def compute(self, prices, date, universe):
-        return self.by_date[pd.Timestamp(date)].reindex(universe)
+    def compute(self, view, universe):
+        return self.by_date[view.horizon].reindex(universe)
 
 
 @pytest.fixture
@@ -64,3 +67,26 @@ def test_last_date_produces_no_record(store):
     result = engine.run(rebalance_dates, universe)
     assert len(result.records) == 1
     assert pd.Timestamp("2020-02-03") not in result.records.index
+
+
+@pytest.fixture
+def long_store():
+    dates = pd.to_datetime(["2020-01-31", "2020-02-28", "2020-03-31", "2020-04-30", "2020-05-29"])
+    tickers = ["A", "B", "C", "D"]
+    idx = pd.MultiIndex.from_product([dates, tickers], names=["date", "ticker"])
+    rng = np.random.default_rng(0)
+    prices = 100.0 * np.cumprod(1.0 + rng.normal(0, 0.05, size=(len(dates), len(tickers))), axis=0)
+    panel = pd.DataFrame(
+        {"close_adj": prices.ravel(), "close_raw": prices.ravel(), "volume": 1}, index=idx
+    ).sort_index()
+    panel["daily_return"] = panel.groupby("ticker")["close_adj"].pct_change()
+    return PriceStore(panel)
+
+
+def test_real_momentum_runs_through_engine(long_store):
+    engine = BacktestEngine(
+        long_store, Momentum(lookback=2, lookback_end=1), RankDollarNeutral(k=1), FixedBPSCost(0)
+    )
+    results = engine.run(list(long_store.dates), ["A", "B", "C", "D"])
+    assert len(results.records) >= 1
+    assert results.records.index.max() < long_store.dates[-1]

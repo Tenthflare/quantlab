@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from quantlab.data.prices import PriceStore
+from quantlab.data.prices import PITView, PriceStore
 from quantlab.features.momentum import Momentum
 from quantlab.labels.forward_return import ForwardReturn
 
@@ -21,15 +21,19 @@ def store():
 
 def test_momentum_uses_skip_window(store):
     # should not use the current date "2020-01-08"
-    momentum = Momentum(lookback=3, lookback_end=1).compute(store, "2020-01-08", ["A"])
+    momentum = Momentum(lookback=3, lookback_end=1).compute(
+        PITView(store, pd.Timestamp("2020-01-08")), ["A"]
+    )
     assert momentum["A"] == pytest.approx(20.0 / 11.0 - 1.0)
 
 
 def test_momentum_nan_when_history_too_short(store):
-    momentum = Momentum(lookback=3, lookback_end=1).compute(store, "2020-01-06", ["A"])
+    momentum = Momentum(lookback=3, lookback_end=1).compute(
+        PITView(store, pd.Timestamp("2020-01-06")), ["A"]
+    )
     assert pd.isna(momentum["A"])  # idx 2 < lookback 3
 
 
 def test_forward_return_is_earned_after_date_position(store):
-    fwd_ret = ForwardReturn(horizon=1).compute(store, "2020-01-02", ["A"])
+    fwd_ret = ForwardReturn(horizon=1).compute(store, pd.Timestamp("2020-01-02"), ["A"])
     assert fwd_ret["A"] == pytest.approx(11.0 / 10.0 - 1.0)

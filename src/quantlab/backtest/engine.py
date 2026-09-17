@@ -2,11 +2,14 @@ from dataclasses import dataclass
 
 import pandas as pd
 
+from quantlab.data.prices import PITView
+
 
 @dataclass
 class BacktestResult:
     records: pd.DataFrame  # per-rebalance: gross_PnL, cost, PnL, turnover
     weights: pd.DataFrame  # date x ticker target weights
+    rebalance_dates: list
 
 
 def month_end_rebalance_dates(trading_dates: pd.DatetimeIndex) -> pd.DatetimeIndex:
@@ -24,7 +27,11 @@ class BacktestEngine:
         self.cost_model = cost_model
 
     def run(self, rebalance_dates: list[pd.Timestamp], universe: list[str]) -> BacktestResult:
-        dates = [pd.Timestamp(d) for d in rebalance_dates]
+        dates = [
+            pd.Timestamp(d)
+            for d in rebalance_dates
+            if self.prices.date_position(d) >= self.feature.min_history
+        ]
         prev_weight = pd.Series(0.0, index=pd.Index(universe, name="ticker"))
         rows, weight_hist = [], {}
 
@@ -32,7 +39,8 @@ class BacktestEngine:
         # forward window, so it correctly produces no record.
         for t, t_next in zip(dates[:-1], dates[1:], strict=True):
             # compute features, execute trade, calculate return, repeat
-            scores = self.feature.compute(self.prices, date=t, universe=universe)
+            view = PITView(self.prices, t)
+            scores = self.feature.compute(view, universe=universe)
             target_weight = self.portfolio.weights(scores, prev_weight)
 
             trades = target_weight.sub(prev_weight, fill_value=0.0)
@@ -57,7 +65,13 @@ class BacktestEngine:
             weight_hist[t] = target_weight
             prev_weight = target_weight
 
-        return BacktestResult(
-            records=pd.DataFrame(rows).set_index("date"),
-            weights=pd.DataFrame(weight_hist).T,
-        )
+        if not rows:
+            empty = pd.DataFrame(columns=["gross_pnl", "cost", "pnl", "turnover"])
+            empty.index.name = "date"
+            return BacktestResult(records=empty, weights=pd.DataFrame(), rebalance_dates=dates)
+        else:
+            return BacktestResult(
+                records=pd.DataFrame(rows).set_index("date"),
+                weights=pd.DataFrame(weight_hist).T,
+                rebalance_dates=dates,
+            )

@@ -28,6 +28,9 @@ quantlab-run --config configs/momentum_dow30.yaml
 
 ## Project Structure (to be filled)
 Brief tree → see [ARCHITECTURE.md](ARCHITECTURE.md).
+[ t-252 .............. t-21 ]   (t-21 → t)      [ t → t_next ]
+└──── signal window ────┘        skip 1mo       └── you hold ──┘
+      (12 months)                                (earn return)
 
 ## Roadmap
 Phase 1 momentum → Phase 2 fundamentals → Phase 3 ML + S&P 500.

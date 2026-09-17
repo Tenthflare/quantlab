@@ -31,7 +31,10 @@ class PriceStore:
         """
         Calendar index of the last trading day <= date (-1 if before all data).
         """
-        return int(self.dates.searchsorted(date, side="right")) - 1
+        date = pd.Timestamp(date)  # guardrail in case str is passed
+        position = int(self.dates.searchsorted(date, side="right")) - 1
+        assert position < 0 or self.dates[position] <= date
+        return position
 
     def history_lookback(self, end_date: pd.Timestamp, lookback: int):
         """
@@ -68,3 +71,25 @@ class PriceStore:
                 tickers = [tickers]
             realised_return = realised_return.reindex(tickers)
         return realised_return
+
+
+class PITView:
+    """
+    Bounded point-in-time view. Features receive this, never the
+    full store, so future access is impossible by construction.
+    """
+
+    def __init__(self, store: PriceStore, horizon) -> None:
+        self._store = store
+        self.horizon = pd.Timestamp(horizon)
+        self.horizon_position = store.date_position(horizon)
+        self._dates = self._store.dates[: self.horizon_position + 1]
+
+    def price_at(self, date, field="close_adj") -> pd.Series:
+        assert pd.Timestamp(date) <= self.horizon, "PIT violation: future access"
+        return self._store.price_at(date, field)
+
+    def history(self, lookback: int):
+        return self._store.history_lookback(self.horizon, lookback)
+
+    # NOTE: there is deliberately NO realized_return / forward method here.

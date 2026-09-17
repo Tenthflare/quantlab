@@ -16,9 +16,10 @@ class FakeFeature:
 
     def __init__(self, by_date):
         self.by_date = by_date
+        self.min_history: int = 0
 
-    def compute(self, prices, date, universe):
-        return self.by_date[pd.Timestamp(date)].reindex(universe)
+    def compute(self, view, universe):
+        return self.by_date[view.horizon].reindex(universe)
 
 
 @pytest.fixture

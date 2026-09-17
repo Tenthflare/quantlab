@@ -9,7 +9,6 @@ def permutation_pnl(
     results: BacktestResult,
     prices: PriceStore,
     universe: list[str],
-    rebalance_dates: list[pd.Timestamp],
     n_permutations: int = 1000,
     seed: int = 0,
 ) -> dict:
@@ -24,7 +23,7 @@ def permutation_pnl(
     or leak shows up as a null that does NOT center at 0.
     """
     rng = np.random.default_rng(seed)
-    dates = [pd.Timestamp(d) for d in rebalance_dates]
+    dates = [pd.Timestamp(d) for d in results.rebalance_dates]
     pairs = list(zip(dates[:-1], dates[1:], strict=True))
 
     # Weights are already leak-free (computed from info <= t). Cache (w, fwd) per period.

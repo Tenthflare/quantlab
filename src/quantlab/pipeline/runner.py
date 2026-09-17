@@ -48,7 +48,6 @@ def run_from_config(cfg: RunConfig) -> dict:
         result,
         store,
         tickers,
-        rebalance_dates,
         n_permutations=cfg.n_permutation,
         seed=cfg.seed,
     )
