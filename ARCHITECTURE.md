@@ -22,14 +22,18 @@ A run is fully specified by a config + seed and is reproducible.
 flowchart LR
     Data --> Features --> Portfolio --> Backtest --> Evaluation
 ```
+```
 fetch → cache (raw) → build_price_panel → cache (processed) → PriceStore → backtest → evaluation
+```
 ### Data Contract
+```
 panel: DataFrame, index = MultiIndex[date, ticker], sorted
   close_adj    : float   # split + dividend adjusted (returns)
   close_raw    : float   # split-adjusted (dollar sizing later)
   volume       : int
   daily_return : float   # per-ticker close_adj.pct_change()
 Invariant: row (t, i) uses only information available at end of day t.
+```
 ### Look-ahead Firewall
 Prevented structurally, in two pieces:
 - PriceStore centralises the point-in-time boundary in one method — date_position(date), using
@@ -103,7 +107,7 @@ The tests encode the correctness claims:
 - test_history_boundary_on_a_non_trading_day — the PIT firewall (a Saturday query returns Friday, never Monday).
 - returns-correctness on hand-built synthetic panels (known pct_change).
 - test_max_drawdown_on_hand_computed_equity + the ">= -1.0" invariant — metric correctness.
-- reproducibility: same config + seed → identical output.
+- reproducibility: same config + seed -> identical output.
 permutation_pnl shuffles realized returns across tickers within each period, destroying the
 signal -> return link, and builds a null distribution of mean per-period returns. For dollar-neutral book, the null centres at zero by construction; the real strategy's p-value
 measures significance, and a spurious edge would surface as an implausibly small p-value — an indirect leakage indicator.
