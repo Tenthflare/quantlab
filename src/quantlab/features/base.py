@@ -7,6 +7,7 @@ from quantlab.data.prices import PITView
 
 class Feature(ABC):
     name: str
+    min_history: int = 0  # trading days of history required before the signal is valid
 
     @abstractmethod
     def compute(self, view: PITView, universe: list[str]) -> pd.Series:

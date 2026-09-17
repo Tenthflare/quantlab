@@ -38,9 +38,7 @@ index) via SQLAlchemy, so the connection string swaps to **Postgres** with no co
 ```mermaid
 flowchart LR
     data[data<br/>PIT price store] --> features[features<br/>12-1 momentum]
-    features --> labels[labels<br/>forward return]
-    labels --> alpha[alpha<br/>rank / ML]
-    alpha --> portfolio[portfolio<br/>dollar-neutral L/S]
+    features --> portfolio[portfolio<br/>dollar-neutral L/S]
     portfolio --> backtest[backtest<br/>engine + costs]
     backtest --> evaluation[evaluation<br/>metrics + tearsheet]
 ```
@@ -49,7 +47,7 @@ Outputs land in `output/<run_name>/`: a tearsheet PNG, per-period `records.csv`,
 cached to `data/` (git-ignored); later runs are offline.
 
 ## Results (Dow 30, 2011–2026, monthly, dollar-neutral gross 2×, 10 bps)
-![tearsheet](outputs/tearsheet.png)
+![tearsheet](output/momentum_dow30/tearsheet.png)
 | Metric | Value |
 |---|---|
 | Sharpe | −0.08 |
@@ -67,7 +65,7 @@ a spurious edge would show up as an implausibly small p-value.
 ```bash
 git clone https://github.com/Tenthflare/quantlab && cd quantlab
 python -m venv .venv && source .venv/bin/activate (for Linux)
-python -m venv .venv && .venv/Scripts/activate (for Windows)
+# python -m venv .venv && .venv/Scripts/activate (for Windows)
 pip install -e ".[dev]"
 python scripts/run_backtest.py configs/momentum_dow30.yaml
 ```
@@ -87,8 +85,8 @@ pytest -q
 
 Python 3.12+ · pandas / numpy · matplotlib · hatchling · ruff · mypy · pytest · GitHub Actions.
 
-## Project Structure (to be filled)
-Brief tree → see [ARCHITECTURE.md]
+## Project Structure 
+See [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ## License
 MIT. 
